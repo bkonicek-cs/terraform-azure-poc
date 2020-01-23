@@ -4,14 +4,14 @@ data "azurerm_subnet" "subnet" {
   resource_group_name  = var.resource_group_name
 }
 
-resource "azurerm_public_ip" "vm" {
-  count = var.has_public_ip ? var.num_vms : 0
+# resource "azurerm_public_ip" "vm" {
+#   count = var.has_public_ip ? var.num_vms : 0
 
-  name                = "${var.vm_prefix}${var.vm_type}${count.index + 1}-pip"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  allocation_method   = var.pip_allocation
-}
+#   name                = "${var.vm_prefix}${var.vm_type}${count.index + 1}-pip"
+#   location            = var.location
+#   resource_group_name = var.resource_group_name
+#   allocation_method   = var.pip_allocation
+# }
 
 resource "azurerm_network_interface" "vm" {
   count = var.num_vms
@@ -25,7 +25,7 @@ resource "azurerm_network_interface" "vm" {
     subnet_id                     = data.azurerm_subnet.subnet.id
     private_ip_address_allocation = var.private_ip_allocation
     private_ip_address            = var.private_ip_allocation != "Dynamic" ? cidrhost(data.azurerm_subnet.subnet.address_prefix, var.subnet_starting_address + count.index) : null
-    public_ip_address_id          = var.has_public_ip ? element(azurerm_public_ip.vm.*.id, count.index) : null
+    public_ip_address_id          = length(var.public_ip_ids) > 0 ? element(var.public_ip_ids, count.index) : null
   }
 }
 

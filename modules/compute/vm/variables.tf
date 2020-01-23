@@ -1,7 +1,13 @@
-variable "has_public_ip" {
-  type        = bool
-  description = "set to true if the VM(s) should have their own public IP addresses"
-  default     = false
+# variable "has_public_ip" {
+#   type        = bool
+#   description = "set to true if the VM(s) should have their own public IP addresses"
+#   default     = false
+# }
+
+variable "public_ip_ids" {
+  type        = list(string)
+  description = "List of Public IP IDs to be assigned to NICs"
+  default     = []
 }
 
 variable "vm_prefix" {
